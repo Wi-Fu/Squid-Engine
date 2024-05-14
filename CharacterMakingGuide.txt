@@ -1,0 +1,91 @@
+Here is where the process for making a character in SquidEngine will be documented:
+
+For starters, this is all (or most, idk tbh -Wi Fu) of the data required to make each part of a character:
+
+Hitbox
+    Vector2 pos:    The position of the hitbox (Defined by [x, y])
+    Rectangle area: The area of the hitbox (Defined by [x, y, width, height])
+    float damage:   The amount of damage the hitbox does
+    bool knockdown: Does the hitbox induce a knockdown state?
+
+Hurtbox
+    Vector2 pos: The position of the hurtbox (Defined by [x,y])
+    Rectangle area: The area of the hurtbox (Defined by [x, y, width, height])
+    bool invul: Is the hurtbox invulnerable?
+
+
+Projectile
+    int hitbox_amount: The amount of hitboxes a projectile has (MAX: 32)
+    Hitbox hboxes[32]: The hitboxes of the projectile get stored here for convenience
+    Vector2 movement: How much does the projectile move in the given direction every second?
+    float time_active: How much time does the projectile have of existence?
+    int belonging: Which player does the projectile belong to? (1,2)
+
+Motion_Inputs
+    int hitbox_amount; //Amount of hitboxes a move has (MAX: 32)
+
+    Hitbox hboxes[32];
+    Vector2 movement; //If action changes the position of the character, by how much or to where
+    float special_cost; //If action requires special meter to be used; how much
+    int bullet_amount; //Does the action generate projectiles; if so, how many
+    int chain[8]; //Inputs required to perform the given action
+
+Character
+    char name[25]:              The character's name
+    float max_hp:               Amount of hit-points a character starts with
+    Vector2 sizebox:          Max size of any given character
+    int hurtbox_amount:         Amount of hurtboxes a character has (MAX: 32)
+    Rectangle hurtbox[32]:      Positions of all the hurtboxes a character has
+    float gravity:              How fast does the character return to the ground
+    float speed_front:          Speed for character when moving forward
+    float speed_back:           Speed for character when moving backwards
+    int jumps:                  Amount of jumps a character has (0, 1, 2) [pls don't do 0. Ever]
+    bool dash:                  true: Character is able to dash / false: player is unable to dash
+    bool air_dash:              true: Character is able to dash / false: player is unable to dash
+    int input_amount:           Amount of inputs a character has (INCLUDES BASE INPUTS)
+    Motion_Inputs actions[64]:  Moves that a character has
+    (INCLUDES BASE INPUTS; these should be at the beginning because of how the log-checker works)
+
+*** I got lazy with formatting, I might do it later but who knows tbh -Wi Fu
+
+Inputs quick guide:
+1   ->  Up
+2   ->  Up + Right
+3   ->  Right
+4   ->  Down + Right
+5   ->  Down
+6   ->  Down + Left
+7   ->  Left
+8   ->  Up + Left
+9   ->  Light Kick
+10  ->  Medium Kick
+11  ->  Heavy Kick
+12  ->  Light Punch
+13  ->  Medium Punch
+14  ->  Heavy Punch
+
+Being now aware of what is being used by a character, we need to ID each one. This is done by simply
+storing all of the characters data inside of another file where their data is formatted in the
+following manner (Blocky is our example here):
+
+%ID 0           <- This indicates the initialization of the character
+BLOCKY          <- Name of the character
+750             <- Max HP
+20              <- Front speed
+10              <- Back speed
+30              <- Gravity
+1               <- Jumps
+true            <- Dash
+true            <- Air-Dash
+#               <- This indicates the initialization of the hurtbox array
+0,0,30,20       <- For every hitbox the character has: (Beginning and finishing [x, y] positions)
+10,10,20,30         (x, y) in (0, 0) is upper left corner
+5,30,25,35
+0,32.5,7,50
+23,32.5,30,50
+$               <- This indicates the initialization of the motion inputs array
+*
+9               <-
+#               <- This indicates the initialization of the hurtbox array
+
+    *** THIS IS UNFINISHED, I HAVE NOT FINISHED HOW ITS GONNA LOOK
